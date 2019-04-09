@@ -58,12 +58,12 @@
 		0B4E4319225B3D5300E865B0 /* Concetration */ = {
 			isa = PBXGroup;
 			children = (
-				0B4E432C225B3F3000E865B0 /* Supporting Files */,
 				0B4E431C225B3D5400E865B0 /* ConcetrationViewController.swift */,
-				0B4E431E225B3D5400E865B0 /* Main.storyboard */,
 				0B4E432D225C44D900E865B0 /* Concetration.swift */,
 				0B4E432F225C459700E865B0 /* Card.swift */,
+				0B4E431E225B3D5400E865B0 /* Main.storyboard */,
 				0B4E4326225B3D5500E865B0 /* Info.plist */,
+				0B4E432C225B3F3000E865B0 /* Supporting Files */,
 			);
 			path = Concetration;
 			sourceTree = "<group>";
