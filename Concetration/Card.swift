@@ -14,8 +14,8 @@ struct Card
     var isMetched = false
     var identifier: Int
     
-    static var identifierFatory = 0
-    static func getUniqueIdentifier() -> Int {
+    private static var identifierFatory = 0
+    private static func getUniqueIdentifier() -> Int {
         identifierFatory += 1
         return identifierFatory
     }

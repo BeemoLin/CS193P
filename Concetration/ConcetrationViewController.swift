@@ -9,36 +9,36 @@
 import UIKit
 
 class ConcetrationViewController: UIViewController {
-    var emojiChoices = ["🎃", "🐰", "🐧", "🌝", "🌹", "🌎", "🌟", "🌈"]
-    lazy var game = Concetration(numberOfPairsOfCards: (cardButtons.count + 1) / 2)
+    private var emojiChoices = ["🎃", "🐰", "🐧", "🌝", "🌹", "🌎", "🌟", "🌈"]
+    private lazy var game = Concetration(numberOfPairsOfCards: numberOfPairOfCards)
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do any additional setup after loading the view.
+    var numberOfPairOfCards: Int {
+        return (cardButtons.count + 1) / 2
     }
-    @IBOutlet weak var flipCountLabel: UILabel!
-    @IBOutlet var cardButtons: [UIButton]!
+    
+    @IBOutlet private weak var flipCountLabel: UILabel!
+    @IBOutlet private var cardButtons: [UIButton]!
     
     
-    @IBAction func startNewGame(_ sender: UIButton) {
+    @IBAction private func startNewGame(_ sender: UIButton) {
         emojiChoices = ["🎃", "🐰", "🐧", "🌝", "🌹", "🌎", "🌟", "🌈"]
         emoji = [Int: String]()
         for button in cardButtons {
             button.setTitle("", for: UIControl.State.normal)
             button.backgroundColor = #colorLiteral(red: 1, green: 0.5763723254, blue: 0, alpha: 1)
         }
-        game = Concetration(numberOfPairsOfCards: (cardButtons.count + 1) / 2)
+        game = Concetration(numberOfPairsOfCards: numberOfPairOfCards)
         flipCountLabel.text = "Flips: \(game.flipCount)"
     }
     
-    @IBAction func touchCard(_ sender: UIButton) {
+    @IBAction private func touchCard(_ sender: UIButton) {
         if let cardNumber = cardButtons.firstIndex(of: sender) {
             game.chooseCard(at: cardNumber)
             updateViewFromModel()
         }
     }
     
-    func updateViewFromModel() {
+    private func updateViewFromModel() {
         for index in cardButtons.indices {
             let button = cardButtons[index]
             let card = game.cards[index]
@@ -55,15 +55,13 @@ class ConcetrationViewController: UIViewController {
     }
     
     
-    var emoji = [Int: String]()
+    private var emoji = [Int: String]()
     
-    func emoji(for card: Card) -> String {
+    private func emoji(for card: Card) -> String {
         if emoji[card.identifier] == nil, emojiChoices.count > 0 {
             let randomIndex = Int.random(in: 0...emojiChoices.count - 1)
             emoji[card.identifier] = emojiChoices.remove(at: randomIndex)
         }
-        
         return emoji[card.identifier] ?? "?"
     }
 }
-
