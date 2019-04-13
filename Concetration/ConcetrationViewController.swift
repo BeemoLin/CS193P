@@ -9,33 +9,28 @@
 import UIKit
 
 class ConcetrationViewController: UIViewController {
-    private var emojiChoices = ["🎃", "🐰", "🐧", "🌝", "🌹", "🌎", "🌟", "🌈"]
+    // private var emojiChoices = ["🎃", "🐰", "🐧", "🌝", "🌹", "🌎", "🌟", "🌈"]
+    private var emojiChoices = "🎃🐰🐧🌝🌹🌎🌟🌈"
+    private var emoji = [Card: String]()
     private lazy var game = Concetration(numberOfPairsOfCards: numberOfPairOfCards)
     
-    var numberOfPairOfCards: Int {
-        return (cardButtons.count + 1) / 2
+    private func emoji(for card: Card) -> String {
+        if emoji[card] == nil, emojiChoices.count > 0 {
+            let r = Int(arc4random_uniform(UInt32(emojiChoices.count)))
+            let randomIndex = emojiChoices.index(emojiChoices.startIndex, offsetBy: r)
+            emoji[card] = String(emojiChoices.remove(at: randomIndex))
+        }
+        return emoji[card] ?? "?"
     }
     
-    @IBOutlet private weak var flipCountLabel: UILabel!
-    @IBOutlet private var cardButtons: [UIButton]!
-    
-    
-    @IBAction private func startNewGame(_ sender: UIButton) {
-        emojiChoices = ["🎃", "🐰", "🐧", "🌝", "🌹", "🌎", "🌟", "🌈"]
-        emoji = [Int: String]()
-        for button in cardButtons {
-            button.setTitle("", for: UIControl.State.normal)
-            button.backgroundColor = #colorLiteral(red: 1, green: 0.5763723254, blue: 0, alpha: 1)
-        }
-        game = Concetration(numberOfPairsOfCards: numberOfPairOfCards)
-        flipCountLabel.text = "Flips: \(game.flipCount)"
-    }
-    
-    @IBAction private func touchCard(_ sender: UIButton) {
-        if let cardNumber = cardButtons.firstIndex(of: sender) {
-            game.chooseCard(at: cardNumber)
-            updateViewFromModel()
-        }
+    private func updateFlipCountLabel() {
+        let attributes: [NSAttributedString.Key:Any] = [
+            .strokeWidth : 5.0,
+            .strokeColor : #colorLiteral(red: 1, green: 0.5763723254, blue: 0, alpha: 1)
+        ]
+        let attributedString = NSAttributedString(string: "Flips: \(game.flipCount)", attributes: attributes)
+        
+        flipCountLabel.attributedText = attributedString
     }
     
     private func updateViewFromModel() {
@@ -51,17 +46,36 @@ class ConcetrationViewController: UIViewController {
                 
             }
         }
-        flipCountLabel.text = "Flips: \(game.flipCount)"
+        
+        updateFlipCountLabel()
     }
     
+    var numberOfPairOfCards: Int {
+        return (cardButtons.count + 1) / 2
+    }
     
-    private var emoji = [Int: String]()
-    
-    private func emoji(for card: Card) -> String {
-        if emoji[card.identifier] == nil, emojiChoices.count > 0 {
-            let randomIndex = Int.random(in: 0...emojiChoices.count - 1)
-            emoji[card.identifier] = emojiChoices.remove(at: randomIndex)
+    @IBOutlet private weak var flipCountLabel: UILabel! {
+        didSet {
+            updateFlipCountLabel()
         }
-        return emoji[card.identifier] ?? "?"
+    }
+    @IBOutlet private var cardButtons: [UIButton]!
+    @IBAction private func startNewGame(_ sender: UIButton) {
+        emojiChoices = "🎃🐰🐧🌝🌹🌎🌟🌈"
+        emoji = [Card: String]()
+        for button in cardButtons {
+            button.setTitle("", for: UIControl.State.normal)
+            button.backgroundColor = #colorLiteral(red: 1, green: 0.5763723254, blue: 0, alpha: 1)
+        }
+        game = Concetration(numberOfPairsOfCards: numberOfPairOfCards)
+        
+        updateFlipCountLabel()
+    }
+    
+    @IBAction private func touchCard(_ sender: UIButton) {
+        if let cardNumber = cardButtons.firstIndex(of: sender) {
+            game.chooseCard(at: cardNumber)
+            updateViewFromModel()
+        }
     }
 }
